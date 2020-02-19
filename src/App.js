@@ -1,49 +1,18 @@
-import React, { useState, useEffect} from 'react';
-import logo from './logo.svg';
+import React from 'react';
+import Wrapper from './components/Wrapper';
+import Header from './components/Header/Header';
+import Table from './components/Table/Table';
 import './App.css';
-import Search from "./components/Search/Search";
-import Result from "./components/Table/Table";
-import UsersContext from "./utils/UsersContext";
-import API from "./utils/API";
 
 function App() {
-  
-  const [usersState, setUsersState] = useState({
-    users: [],
-    searchTerm: ""
-  });
-
-  function handleClick(searchedFor) {
-    setUsersState({ ...usersState, searchTerm: searchedFor });
-  }
-
-  useEffect(() => {
-    API.search().then(res => {
-      setUsersState({ ...usersState, users: res.data.results });
-    });
-    return () => {
-      console.log("Sorting...");
-    };
-  }, []);
-
   return (
-    <>
-      <div className="App">
-        <div className="jumbotron">
-          <h1 className="title">Employee-Tracker</h1>
-        </div>
-        <UsersContext.Provider value={usersState}>
-          <div className="searchDiv">
-            <Search handleClick={handleClick} />
-          </div>
-          <div className="resultsDisplay">
-            <Result />
-          </div>
-        </UsersContext.Provider>
-      </div>
-    </>
+    <div className='App'>
+      <Wrapper>
+        <Header />
+        <Table />
+      </Wrapper>
+    </div>
   );
 }
-
 
 export default App;

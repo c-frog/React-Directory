@@ -1,40 +1,26 @@
-import React from "react";
-import "./search.css";
+import React from 'react';
 
-function Form({ handleClick }) {
-   
-return (
-   <>
-   <h2>Search Employees</h2>
-   <form>
-      <div className=" input-group">
-         <input
-         type="text"
-         className="form-control"
-         id="inputFiels"
-         placeholder="John Doe"
-         />
-         <div className="input-group-append">
-         <button
-            className="btn btn-outline-secondary"
-            type="button"
-            id="button-addon2"
-            onClick={event => {
-               let searchedFor =
-               event.target.parentNode.previousElementSibling.value;
-               handleClick(searchedFor);
-            }}
-         >
-            Search
+const Nav = ({ searchFilter }) => {
+
+
+   return (
+      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+               <span className="navbar-toggler-icon"></span>
          </button>
+
+         <div className="collapse navbar-collapse" id="navbarColor01">
+               <form className="form-inline my-2 my-lg-0">
+                  <input
+                     className="form-control mr-sm-2"
+                     type="search"
+                     placeholder="Search"
+                     onChange={e => searchFilter(e)}
+                  />
+               </form>
          </div>
-      </div>
-      <small id="searchHelp" className="form-text text-muted">
-         Search for employee/s by name
-      </small>
-   </form>
-   </>
-);
+      </nav>
+   )
 }
 
-export default Form;
+export default Nav;
