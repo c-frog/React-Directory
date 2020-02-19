@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Search from "./components/search/Search";
+import Search from "./components/Search/Search";
 import Result from "./components/Table/Table";
 import UsersContext from "./utils/UsersContext";
 import API from "./utils/API";
