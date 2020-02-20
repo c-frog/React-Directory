@@ -1,88 +1,68 @@
-import React, { useContext } from "react";
-import "./table.css";
+import React, { useState, useEffect } from 'react';
+import API from '../../utils/API';
+// import TableHeader from '../TableHeader';
+import Nav from '../Search/Search';
 
-import UsersContext from "../../utils/UsersContext";
 
 const Table = () => {
-   const test = useContext(UsersContext);
+   const [users, setUsers] = useState([]);
+   const [filteredUsers, setFilteredUsers] = useState([]);
+   const [sortOrder, setSortOrder] = useState('ascend');
 
-   const sortFun = (a, b) => {
-      const nameA = a.name.first.toUpperCase();
-      const nameB = b.name.first.toUpperCase();
 
-      let comparison = 0;
-      if (nameA > nameB) {
-      comparison = 1;
-      } else if (nameA < nameB) {
-      comparison = -1;
+   useEffect(() => {
+      API.getUsers()
+         .then(results => {
+         setUsers(results.data.results)
+         setFilteredUsers(results.data.results)
+      })
+   }, [setSortOrder]);
+
+   const searchFilter = (e) => {
+      const filter = e.target.value;
+      const filteredUserList = users.filter(item => {
+         let values = Object.values(item).join("").toLowerCase();
+         return values.indexOf(filter.toLowerCase()) !== -1;
+      });
+      setFilteredUsers(filteredUserList);
+   }
+
+   const sortNames = () => {
+      if (sortOrder) {
+      console.log(filteredUsers)
+      filteredUsers.sort((a,b) => a.name.first.localeCompare(b.name.first));
+      setFilteredUsers(filteredUsers);
       }
-      return comparison;
-   };
-
+   }
+   
    return (
-      <div>
-      <table className="table table-striped table-light">
-         <thead className="thead-dark">
-            <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Gender</th>
-            <th scope="col">Phone #</th>
-            <th scope="col">Picture</th>
-         </tr>
-      </thead>
-   <tbody>
-            {test.searchTerm === ""
-            ? test.users.sort(sortFun).map((item, index) => (
-               <>
-                  <tr>
-                     <td>{index + 1}</td>
-                     <td>{item.name.first + " " + item.name.last}</td>
-                     <td>{item.email}</td>
-                     <td>{item.gender}</td>
-                     <td>{item.phone}</td>
-                     <td>
-                     <img src={item.picture.thumbnail} alt=""></img>
-                     </td>
-                  </tr>
-               </>
-            ))
-            : test.users
-               .filter((item, index) => {
-                  if (
-                     test.searchTerm.toUpperCase() ===
-                     item.name.first.toUpperCase() ||
-                     test.searchTerm.toUpperCase() ===
-                     item.name.last.toUpperCase() ||
-                     test.searchTerm.toUpperCase() ===
-                     item.name.first.toUpperCase() +
-                     " " +
-                     item.name.last.toUpperCase()
-                  ) {
-                     return true;
-                  }
-                  return false;
-               })
-               .sort(sortFun)
-               .map((item, index) => (
-               <>
-                  <tr>
-                     <td>{index + 1}</td>
-                     <td>{item.name.first + " " + item.name.last}</td>
-                     <td>{item.email}</td>
-                     <td>{item.gender}</td>
-                     <td>{item.phone}</td>
-                     <td>
-                     <img src={item.picture.thumbnail} alt=""></img>
-                     </td>
-                     </tr>
-                  </>
-               ))}
-      </tbody>
-      </table>
-   </div>
-   );
-};
+      <>
+         <Nav searchFilter={searchFilter} />
+
+         <button type="butto" className="btn btn-primary mt-2" onClick={sortNames} >Sort Names</button>
+
+         <table className='table table-hover mt-5'>
+               <tbody>
+                  {/* <TableHeader /> */}
+                  {filteredUsers.map(({ login, name, picture, phone, email, dob }) => {
+                     return (
+
+                           <tr key={login.uuid}>
+                              <td> <img src={picture.thumbnail} alt={name} /></td>
+                              <td>{name.first} {name.last}</td>
+                              <td>{phone}</td>
+                              <td>{email}</td>
+                              <td>{dob.age}</td>
+                           </tr>
+                     )
+                  })}
+               </tbody>
+         </table>
+
+
+      </>
+   )
+
+}
 
 export default Table;

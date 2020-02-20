@@ -1,6 +1,6 @@
 import React from 'react';
-
-const Nav = ({ searchFilter }) => {
+import './search.css'
+const Search = ({ searchFilter }) => {
 
 
    return (
@@ -23,4 +23,4 @@ const Nav = ({ searchFilter }) => {
    )
 }
 
-export default Nav;
+export default Search;
